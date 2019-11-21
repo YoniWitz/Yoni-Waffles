@@ -28,7 +28,11 @@ export default {
   },
   methods: {
     deleteWaffle(id) {
-      this.waffles = this.waffles.filter(waffle => waffle.id != id);
+      
+      db.collection("waffles").doc(id).delete()
+      .then(() => {
+        this.waffles = this.waffles.filter(waffle => waffle.id != id);
+      })
     }
   },
   created() {
@@ -38,7 +42,7 @@ export default {
         response.forEach(doc => {
           let waffle = doc.data();
           waffle.id = doc.id;
-          this.waffles.push(waffle)
+          this.waffles.push(waffle);
         });
       })
       .catch(err => {
