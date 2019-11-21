@@ -1,3 +1,4 @@
+
 <template>
   <div class="navbar">
     <nav class="nav-extended indogo darken-2">
