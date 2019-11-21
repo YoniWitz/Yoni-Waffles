@@ -2,6 +2,7 @@
   <div class="index container">
     <div class="card" v-for="(waffle) in waffles" v-bind:key="waffle.id">
       <div class="card-content">
+        <i class="material-icons delete" v-on:click="deleteWaffle(waffle.id)">delete</i>
         <h2 class="indigo-text">{{waffle.title}}</h2>
         <ul class="ingredients">
           <li v-for="(ingredient,index) in waffle.ingredients" :key="index">
@@ -34,27 +35,41 @@ export default {
         }
       ]
     };
+  },
+  methods:{
+    deleteWaffle(id){
+      this.waffles = this.waffles.filter(waffle =>waffle.id!=id )
+    }
   }
-};
+}
 </script>
 
-<style  scoped>
-.index{
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr;
-  grid-gap:30px;
-  margin-top:60px;
+<style scoped>
+.index {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 30px;
+  margin-top: 60px;
 }
 
-.index h2{
-  font-size:1.8em;
-  text-align:center;
-  margin-top : 0;
+.index h2 {
+  font-size: 1.8em;
+  text-align: center;
+  margin-top: 0;
 }
-.index .ingredients{
-  margin:30px auto;
+.index .ingredients {
+  margin: 30px auto;
 }
-.index .ingredients li{
-  display:inline-block
+.index .ingredients li {
+  display: inline-block;
+}
+
+.index .delete {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  cursor: pointer;
+  color: #444;
+  font-size: 1.4em;
 }
 </style>
