@@ -15,33 +15,37 @@
 </template>
 
 <script>
+import db from "@/firebase/init";
+
 export default {
   name: "index",
+
   data() {
     return {
       msg: "Welcome to Your Vue.js App",
-      waffles: [
-        {
-          title: "Yoni Brew",
-          slug: "yoni-brew",
-          ingredients: ["bananas", "coffee", "milk"],
-          id: 1
-        },
-        {
-          title: "Morning Mood",
-          slug: "morning-mood",
-          ingredients: ["mango", "lime", "juice"],
-          id: 2
-        }
-      ]
+      waffles: []
     };
   },
-  methods:{
-    deleteWaffle(id){
-      this.waffles = this.waffles.filter(waffle =>waffle.id!=id )
+  methods: {
+    deleteWaffle(id) {
+      this.waffles = this.waffles.filter(waffle => waffle.id != id);
     }
+  },
+  created() {
+    db.collection("waffles")
+      .get()
+      .then(response => {
+        response.forEach(doc => {
+          let waffle = doc.data();
+          waffle.id = doc.id;
+          this.waffles.push(waffle)
+        });
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
-}
+};
 </script>
 
 <style scoped>
