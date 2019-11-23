@@ -27,8 +27,7 @@ export default {
     };
   },
   methods: {
-    deleteWaffle(id) {
-      
+    deleteWaffle(id) {    
       db.collection("waffles").doc(id).delete()
       .then(() => {
         this.waffles = this.waffles.filter(waffle => waffle.id != id);

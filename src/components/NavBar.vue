@@ -3,11 +3,11 @@
   <div class="navbar">
     <nav class="nav-extended indogo darken-2">
       <div class="nav-content">
-        <router-link to>
+        <router-link :to="{name:'index'}">
           <span class="nav-title">Yoni Waffles</span>
         </router-link>
         <a href class="btn-floating btn-larger halfway-fab pink">
-          <router-link to>
+          <router-link :to="{name: 'addWaffle'}">
             <i class="material-icons">add</i>
           </router-link>
         </a>
@@ -24,6 +24,6 @@ export default {
 
 <style scoped>
 .navbar nav {
-    padding: 0 20px;
+  padding: 0 20px;
 }
 </style>
