@@ -3,16 +3,10 @@
     <form v-on:reset="resetFields" v-on:submit.prevent="addWaffle">
       <h2>Add Waffle Recipe</h2>
 
-      <div>
-        <select>
-          <option>2</option>
-          <option>2</option>
-        </select>
-      </div>
       <div class="form-row">
         <div class="form-field title">
-          <label for="wafflie-title">Waffle Title</label>
-          <input type="text" id="waffle-title" v-model.trim="waffleTitle" />
+          <label for="title">Title</label>
+          <input type="text" id="title" v-model.trim="title" />
         </div>
         <div class="form-field add-ingredient">
           <label for="ingredient">Add Ingredient (press tab to add)</label>
@@ -22,7 +16,6 @@
             v-on:keydown.tab.prevent="addIngredient"
             v-model.trim="ingredient"
           />
-          
         </div>
         <div v-for="(ingredient, index) in ingredients" v-bind:key="index" class="form-field">
           <label for="ingredient">Ingredient {{index | indexPlus}}</label>
@@ -47,7 +40,7 @@ export default {
   name: "addWaffle",
   data() {
     return {
-      waffleTitle: "",
+      title: "",
       ingredient: "",
       ingredients: [],
       feedback: "",
@@ -56,27 +49,28 @@ export default {
   },
   methods: {
     resetFields() {
-      this.waffleTitle = "";
+      this.title = "";
       this.ingredients = [];
       this.ingredient = "";
       this.feedback = "";
     },
     addWaffle() {
-        this.slug = slugify(this.waffleTitle, {
-            replacement: "-",
-            remove: /[$*_+~.()'"!\-:@]/g,
-            lower: true
-          })
+      this.slug = slugify(this.title, {
+        replacement: "-",
+        remove: /[$*_+~.()'"!\-:@]/g,
+        lower: true
+      });
       db.collection("waffles")
         .add({
-          title: this.waffleTitle,
+          title: this.title,
           ingredients: this.ingredients,
           slug: this.slug
         })
-        .then(this.$router.push({ name: "index" }));
-      this.resetFields().catch(err =>{
-          console.log(err)
-      });
+        .then(this.$router.push({ name: "index" }))
+        .catch(err => {
+          console.log(err);
+        });
+      this.resetFields();
     },
     addIngredient() {
       if (this.ingredient) {
@@ -87,13 +81,15 @@ export default {
         this.feedback = "must enter ingredient value";
       }
     },
-    deleteIngredient(ingredientToRemove){
-        this.ingredients = this.ingredients.filter(ingredient => ingredient !== ingredientToRemove)
+    deleteIngredient(ingredientToRemove) {
+      this.ingredients = this.ingredients.filter(
+        ingredient => ingredient !== ingredientToRemove
+      );
     }
   },
   computed: {
     formIsValid() {
-      return this.waffleTitle && this.ingredients.length > 0;
+      return this.title && this.ingredients.length > 0;
     }
   },
   filters: {
@@ -152,7 +148,7 @@ legend {
 
 .form-field {
   flex-direction: column;
-  position:relative;
+  position: relative;
   margin: 20px auto;
 }
 button {
@@ -195,7 +191,7 @@ button.reset:hover {
   top: 4px;
   bottom: 16px;
   cursor: pointer;
-  color: #AAA;
+  color: #aaa;
   font-size: 1.4em;
 }
 </style>

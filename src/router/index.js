@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Index from '@/views/Index.vue'
 import AddWaffle from '@/components/AddWaffle.vue'
+import EditWaffle from '@/components/EditWaffle.vue'
 
 Vue.use(VueRouter)
 
@@ -15,6 +16,11 @@ const routes = [
     path: '/add-waffle',
     name: 'addWaffle',
     component: AddWaffle
+  },
+  {
+    path: '/edit-waffle/:waffle_slug',
+    name: 'editWaffle',
+    component: EditWaffle
   }
 ]
 
