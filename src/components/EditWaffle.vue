@@ -19,7 +19,7 @@
         </div>
         <div v-for="(ingredient, index) in ingredients" v-bind:key="index" class="form-field">
           <label for="ingredient">Ingredient {{index | indexPlus}}</label>
-          <input type="text" id="ingredient" v-model.trim="ingredients[index]" />
+          <input type="text" :id="index" v-model.trim="ingredients[index]" />
           <i class="material-icons delete" v-on:click="deleteIngredient(ingredient)">delete</i>
         </div>
       </div>
