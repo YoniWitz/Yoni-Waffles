@@ -2,9 +2,9 @@
 
 An online waffle menu. Allows users to see all available waffles on the menu. User can also edit or add waffles as necessary. Written in Vue.js, uses Firebase for database purposes, User Authorization and deployment.
 
-## You can use it [here](https://yoni-waffles.firebaseapp.com/)
+## You can use it [here](https://yonis-waffles.firebaseapp.com/)
 
-<image src="./src/assets/yonis-waffles.png">
+<image src="./src/assets/yoni-waffles.png">
 
 ## Summary
 
