@@ -4,7 +4,7 @@ An online waffle menu. Allows users to see all available waffles on the menu. Us
 
 ## You can use it [here](https://yoni-waffles.firebaseapp.com/)
 
-<image src="./src/assets/yoni-waffles.png">
+<image src="./src/assets/yonis-waffles.png">
 
 ## Summary
 
