@@ -3,7 +3,7 @@
     <div class="card" v-for="(waffle) in waffles" v-bind:key="waffle.id">
       <div class="card-content">
         <i class="material-icons delete" v-on:click="deleteWaffle(waffle.id)">delete</i>
-        <i class="material-icons edit" v-on:click="editWaffle(waffle.slug)">edit</i>
+        <i class="material-icons edit" v-on:click="editWaffle(waffle.slug, waffle.id)">edit</i>
         <h2 class="indigo-text">{{waffle.title}}</h2>
         <ul class="ingredients">
           <li v-for="(ingredient,index) in waffle.ingredients" :key="index">
@@ -23,7 +23,6 @@ export default {
 
   data() {
     return {
-      msg: "Welcome to Your Vue.js App",
       waffles: []
     };
   },
@@ -34,8 +33,8 @@ export default {
         this.waffles = this.waffles.filter(waffle => waffle.id != id);
       })
     },
-    editWaffle(slug){
-      this.$router.push({name:'editWaffle', params:{waffle_slug:slug}})
+    editWaffle(slug, id){
+      this.$router.push({name:'editWaffle', params:{waffle_slug:slug, id:id}})
     }
   },
   created() {

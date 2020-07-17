@@ -1,6 +1,5 @@
 {
   "projects": {
-    "default": "fast-tensor-697",
-    "staging": "yonis-waffles"
+    "default": "yonis-waffles"
   }
 }

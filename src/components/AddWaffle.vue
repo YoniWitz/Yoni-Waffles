@@ -9,7 +9,7 @@
           <input type="text" id="title" v-model.trim="title" />
         </div>
         <div class="form-field add-ingredient">
-          <label for="ingredient">Add Ingredient (press tab to add)</label>
+          <label for="ingredient">Enter Ingredient and press Tab to add</label>
           <input
             type="text"
             id="ingredients"
@@ -17,16 +17,29 @@
             v-model.trim="ingredient"
           />
         </div>
-        <div v-for="(ingredient, index) in ingredients" v-bind:key="index" class="form-field">
-          <label for="ingredient">Ingredient {{index | indexPlus}}</label>
-          <input type="text" id="ingredient" v-model.trim="ingredients[index]" />
-          <i class="material-icons delete" v-on:click="deleteIngredient(ingredient)">delete</i>
+        <div
+          v-for="(ingredient, index) in ingredients"
+          v-bind:key="index"
+          class="form-field"
+        >
+          <label for="ingredient" >Ingredient {{ index | indexPlus }}</label>
+          <input
+            type="text"
+            id="ingredient"
+            v-model="ingredients[index]"
+            disabled
+          />
+          <i
+            class="material-icons delete"
+            v-on:click="deleteIngredient(ingredient)"
+            >delete</i
+          >
         </div>
       </div>
-      <p v-if="feedback" class="red-text">{{feedback}}</p>
+      <p v-if="!feedbackMessage" class="red-text">{{ feedback }}</p>
       <div class="form-field action-buttons">
         <button type="reset" class="reset">Reset</button>
-        <button type="submit" v-bind:disabled="!formIsValid">Add Waffle</button>
+        <button type="submit">Add Waffle</button>
       </div>
     </form>
   </div>
@@ -44,7 +57,7 @@ export default {
       ingredient: "",
       ingredients: [],
       feedback: "",
-      slug: ""
+      slug: "",
     };
   },
   methods: {
@@ -55,22 +68,25 @@ export default {
       this.feedback = "";
     },
     addWaffle() {
-      this.slug = slugify(this.title, {
-        replacement: "-",
-        remove: /[$*_+~.()'"!\-:@]/g,
-        lower: true
-      });
-      db.collection("waffles")
-        .add({
-          title: this.title,
-          ingredients: this.ingredients,
-          slug: this.slug
-        })
-        .then(this.$router.push({ name: "index" }))
-        .catch(err => {
-          console.log(err);
+      if (this.formIsValid()) {
+        this.slug = slugify(this.title, {
+          replacement: "-",
+          remove: /[$*_+~.()'"!\-:@]/g,
+          lower: true,
         });
-      this.resetFields();
+        db.collection("waffles")
+          .add({
+            title: this.title,
+            ingredients: this.ingredients,
+            slug: this.slug,
+          })
+          .then(this.$router.push({ name: "index" }))
+          .catch((err) => {
+            console.log(err);
+          });
+      } else {
+        this.feedback = "Must enter waffle title and at least one ingredient";
+      }
     },
     addIngredient() {
       if (this.ingredient) {
@@ -78,25 +94,28 @@ export default {
         this.ingredient = "";
         this.feedback = "";
       } else {
-        this.feedback = "must enter ingredient value";
+        this.feedback = "Must enter ingredient value";
       }
     },
     deleteIngredient(ingredientToRemove) {
       this.ingredients = this.ingredients.filter(
-        ingredient => ingredient !== ingredientToRemove
+        (ingredient) => ingredient !== ingredientToRemove
       );
-    }
+    },
+    formIsValid() {
+      return this.title && this.ingredients.length > 0;
+    },
   },
   computed: {
-    formIsValid() {
+    feedbackMessage() {
       return this.title && this.ingredients.length > 0;
     }
   },
   filters: {
     indexPlus(index) {
       return index + 1;
-    }
-  }
+    },
+  },
 };
 </script>
 

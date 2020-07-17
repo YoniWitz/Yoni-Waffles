@@ -9,7 +9,7 @@
           <input type="text" id="title" v-model.trim="title" />
         </div>
         <div class="form-field add-ingredient">
-          <label for="ingredient">Add Ingredient (press tab to add)</label>
+          <label for="ingredient">Enter Ingredient and Press Tab to Add</label>
           <input
             type="text"
             id="ingredients"
@@ -17,16 +17,26 @@
             v-model.trim="ingredient"
           />
         </div>
-        <div v-for="(ingredient, index) in ingredients" v-bind:key="index" class="form-field">
-          <label for="ingredient">Ingredient {{index | indexPlus}}</label>
-          <input type="text" :id="index" v-model.trim="ingredients[index]" />
-          <i class="material-icons delete" v-on:click="deleteIngredient(ingredient)">delete</i>
+        <div
+          v-for="(ingredient, index) in ingredients"
+          v-bind:key="index"
+          class="form-field"
+        >
+          <label for="ingredient">Ingredient {{ index | indexPlus }}</label>
+          <input type="text" :id="index" v-model.trim="ingredients[index]" disabled/>
+          <i
+            class="material-icons delete"
+            v-on:click="deleteIngredient(ingredient)"
+            >delete</i
+          >
         </div>
       </div>
-      <p v-if="feedback" class="red-text">{{feedback}}</p>
+      <p v-if="!feedbackMessage" class="red-text">{{ feedback }}</p>
       <div class="form-field action-buttons">
         <button type="reset" class="reset">Reset</button>
-        <button type="submit" v-bind:disabled="!formIsValid">Save Waffle</button>
+        <button type="submit">
+          Save Waffle
+        </button>
       </div>
     </form>
   </div>
@@ -41,46 +51,50 @@ export default {
   data() {
     return {
       slug: this.$route.params.waffle_slug,
+      id: this.$route.params.id,
       ingredient: "",
       feedback: "",
       title: "",
-      ingredients: []
+      ingredients: [],
     };
   },
   created() {
     db.collection("waffles")
-      .where("slug", "==", this.slug)
+      .doc(this.id)
       .get()
-      .then(response => {
-        response.forEach(doc => {
+      .then(doc => {
           this.title = doc.data().title;
           this.ingredients = doc.data().ingredients;
           this.id = doc.id;
-        });
-      })
-      .catch(err => {
+        })     
+      .catch((err) => {
         console.log(err);
       });
   },
   methods: {
     saveWaffle() {
-      this.slug = slugify(this.title, {
-        replacement: "-",
-        remove: /[$*_+~.()'"!\-:@]/g,
-        lower: true
-      });
-      db.collection("waffles")
-        .doc(this.id)
-        .update({
-          title: this.title,
-          ingredients: this.ingredients,
-          slug: this.slug
-        })
-        .then(this.$router.push({ name: "index" }))
-        .catch(err => {
-          console.log(err);
+      if (this.formIsValid()) {
+        this.slug = slugify(this.title, {
+          replacement: "-",
+          remove: /[$*_+~.()'"!\-:@]/g,
+          lower: true,
         });
-      this.resetFields();
+        db.collection("waffles")
+          .doc(this.id)
+          .update({
+            title: this.title,
+            ingredients: this.ingredients,
+            slug: this.slug,
+          })
+          .then(this.$router.push({ name: "index" }))
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+      {
+        this.feedback = "Must enter waffle title and at least one ingredient";
+      }
+      //this.resetFields();
     },
     resetFields() {
       this.title = "";
@@ -99,20 +113,23 @@ export default {
     },
     deleteIngredient(ingredientToRemove) {
       this.ingredients = this.ingredients.filter(
-        ingredient => ingredient !== ingredientToRemove
+        (ingredient) => ingredient !== ingredientToRemove
       );
-    }
-  },
-  computed: {
+    },
     formIsValid() {
       return this.title && this.ingredients.length > 0;
-    }
+    },
+  },
+  computed: {
+     feedbackMessage() {
+      return this.title && this.ingredients.length > 0;
+    },
   },
   filters: {
     indexPlus(index) {
       return index + 1;
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -26,4 +26,7 @@ export default {
 .navbar nav {
   padding: 0 20px;
 }
+nav i, nav [class^="mdi-"], nav [class*="mdi-"], nav i.material-icons {
+    line-height: 40px;
+}
 </style>
